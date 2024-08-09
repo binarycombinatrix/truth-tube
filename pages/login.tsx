@@ -2,7 +2,7 @@
 import type { FormEvent } from "react";
 import { useState, useEffect } from "react";
 import { signIn } from "aws-amplify/auth";
-import Toast from "./components/toast";
+import Toast from "../components/toast";
 
 interface SignInFormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;

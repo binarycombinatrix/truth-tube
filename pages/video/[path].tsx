@@ -3,7 +3,7 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { getUrl } from "aws-amplify/storage";
 import { generateClient } from "aws-amplify/api";
 import { type Schema } from "@/amplify/data/resource";
-import VideoPlayer from "../components/videoplayer";
+import VideoPlayer from "../../components/videoplayer";
 // pages/video/[path].tsx
 
 const client = generateClient<Schema>();

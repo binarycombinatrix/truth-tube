@@ -1,7 +1,7 @@
 import type { FormEvent } from "react";
 import { signUp, confirmSignUp } from "aws-amplify/auth";
 import { useState, useEffect } from "react";
-import Toast from "./components/toast";
+import Toast from "../components/toast";
 
 interface SignUpFormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;

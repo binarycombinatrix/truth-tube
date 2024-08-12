@@ -1,18 +1,25 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
+import { StorageImage } from "@aws-amplify/ui-react-storage";
 
 const client = generateClient<Schema>();
 
 interface VideoObject {
-  title: string;
-  description: any;
-  path?: string;
-  id: string;
-  url: string | null;
-  thumbnail: string | null;
-  channel: string | null;
+  partitionKey: string;
+  sortKey: string; ////video title or username   + uuidv1
+  type: string; ///specify type to avoid confusion
+  category?: string | null; /// category which is partition key for video entry
+  debate?: any; ///debate of the video
+  description?: string | null; ///channel or video description
+  url?: string | null; ///video url
+  thumbnail?: string | null; ///video thumbnail
+  dp?: string | null; ///user dp can store in both cases,
+  comment?: any; ///only in case of video
+  dn?: string | null;
+  path?: string | null;
 }
 
 export default function App() {
@@ -24,18 +31,24 @@ export default function App() {
     // });
 
     try {
-      const { data: vids, errors } = await client.models.Video.list();
+      const { data: vids, errors } = await client.models.Video.list({
+        partitionKey: "Educational",
+      });
 
       if (errors) {
         console.error(errors);
       } else {
-        const videolist = vids.map((v) => {
-          const newtitle = v.title.replace(/ /g, "_");
-          const path = newtitle.concat("_", v.id);
-          return { ...v, path: path };
+        console.log("data from dynamoDB =>", vids);
+
+        const vidArr = vids.map((video) => {
+          const atag = encodeURIComponent(
+            video.partitionKey + "_" + video.sortKey
+          );
+
+          return { ...video, path: atag };
         });
-        console.log("videos=>", videolist);
-        setVideos(videolist);
+
+        setVideos(vidArr);
       }
     } catch (error) {
       console.log("couldn't get videos=>", error);
@@ -46,11 +59,11 @@ export default function App() {
     listVideos();
   }, []);
 
-  function createTodo() {
-    // client.models.Video.create({
-    //   content: window.prompt("Todo content"),
-    // });
-  }
+  // function createTodo() {
+  // client.models.Video.create({
+  //   content: window.prompt("Todo content"),
+  // });
+  // }
 
   return (
     <main>
@@ -58,9 +71,19 @@ export default function App() {
       {/* <button onClick={createTodo}>+ new</button> */}
       <ul>
         {videos.map((video) => (
-          <Link href={`/video/${video.path}`} key={video.id}>
-            <li>{video.title}</li>
-          </Link>
+          <li key={video.sortKey}>
+            <Link href={`/video/${video.path ?? ""}`}>
+              {video.thumbnail && (
+                <StorageImage
+                  path={video.thumbnail}
+                  // width={400}
+                  height={400}
+                  alt={video?.sortKey?.split("_")[0]}
+                />
+              )}
+              <p>{video?.sortKey?.split("_")[0]}</p>
+            </Link>
+          </li>
         ))}
       </ul>
       <div>

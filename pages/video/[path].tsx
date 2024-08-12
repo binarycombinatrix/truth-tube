@@ -29,19 +29,26 @@ export const getStaticProps: GetStaticProps<VideoProps> = async ({
   params,
 }) => {
   const { path } = params as { path: string };
-
+  console.log("url path ==>", path);
+  const dpath = decodeURIComponent(path);
+  const findex = dpath.indexOf("_");
+  const pathArr = [
+    path.substring(0, findex),
+    path.substring(findex + 1, path.length),
+  ]; //path.substring(0, findex);
+  console.log("pathArr=>", pathArr);
   // path is the video id
-  const pathArr = path.split("_");
-  const videoId = pathArr.pop();
-  const videoTitle = pathArr.join(" ");
+  // const pathArr = path.split("_");
+  // const videoId = pathArr.pop();
+  // const videoTitle = pathArr.join(" ");
 
   try {
-    if (videoId && videoTitle) {
+    if (pathArr.length == 2) {
       const { data, errors } = await client.models.Video.get({
-        title: videoTitle,
-        id: videoId,
+        partitionKey: pathArr[0],
+        sortKey: pathArr[1],
       });
-
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       if (errors) {
         console.error(errors);
       } else if (data) {
@@ -81,10 +88,10 @@ export const getStaticProps: GetStaticProps<VideoProps> = async ({
 const VideoPage = ({ data }: VideoProps) => {
   return (
     <div>
-      <h1>{data?.title ?? ""}</h1>
+      <h1>{data?.sortKey ?? ""}</h1>
       <VideoPlayer
         url={data?.url ?? ""}
-        title={data?.title ?? ""}
+        title={data?.sortKey ?? ""}
         thumbnail={data?.thumbnail ?? ""}
       />
       {/* <p>{videoData.description}</p> */}

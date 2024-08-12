@@ -29,6 +29,8 @@ export default function Login() {
       console.log("sign in outcome=>`", signInResult);
 
       if (signInResult.isSignedIn === true) {
+        localStorage.setItem("username", form.elements.email.value);
+        localStorage.setItem("dn", form.elements.email.value.split("@")[0]);
         setType("success");
         setMessage("Signed in successfully");
       }

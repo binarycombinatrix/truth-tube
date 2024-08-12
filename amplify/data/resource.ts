@@ -3,14 +3,19 @@ import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 const schema = a.schema({
   Video: a
     .model({
-      title: a.string().required(),
-      id: a.string().required(),
-      description: a.json().array(),
-      url: a.string().required(),
-      thumbnail: a.string(),
-      channel: a.string(),
+      partitionKey: a.string().required(),
+      sortKey: a.string().required(), ////video title or username   + uuidv1
+      type: a.string().required(), ///specify type to avoid confusion
+      category: a.string(), /// category which is partition key for video entry
+      debate: a.json().array(), ///debate of the video
+      description: a.string(), ///channel or video description
+      url: a.string(), ///video url
+      thumbnail: a.string(), ///video thumbnail
+      dp: a.string(), ///user dp can store in both cases,
+      comment: a.json().array(), ///only in case of video
+      dn: a.string(), //channel name
     })
-    .identifier(["title", "id"])
+    .identifier(["partitionKey", "sortKey"])
     .authorization((allow) => [allow.publicApiKey()]),
 });
 

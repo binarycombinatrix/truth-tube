@@ -7,5 +7,9 @@ export const storage = defineStorage({
       allow.guest.to(["read"]),
       allow.entity("identity").to(["read", "write", "delete"]),
     ],
+    "thumbnails/*": [
+      allow.guest.to(["read"]),
+      allow.authenticated.to(["read", "write", "delete"]),
+    ],
   }),
 });

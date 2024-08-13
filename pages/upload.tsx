@@ -107,7 +107,10 @@ export default function Upload() {
           const { errors, data: user_video } = await client.models.Video.create(
             {
               partitionKey:
-                "u#" + (localStorage.getItem("username") ?? "Educational"),
+                "u#" +
+                (localStorage.getItem("dn") ?? "Educational") +
+                "_" +
+                tUUID,
               sortKey:
                 "v#" + title + "_" + localStorage.getItem("dn") + "_" + tUUID,
               category: "Educational",

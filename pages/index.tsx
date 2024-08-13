@@ -20,6 +20,7 @@ interface VideoObject {
   comment?: any; ///only in case of video
   dn?: string | null;
   path?: string | null;
+  channel?: string | null;
 }
 
 export default function App() {
@@ -45,7 +46,10 @@ export default function App() {
             video.partitionKey + "_" + video.sortKey
           );
 
-          return { ...video, path: atag };
+          const sArr = video.sortKey.split("_");
+          sArr.shift();
+          const channel = sArr.join("_");
+          return { ...video, path: atag, channel };
         });
 
         setVideos(vidArr);
@@ -72,16 +76,19 @@ export default function App() {
       <ul>
         {videos.map((video) => (
           <li key={video.sortKey}>
-            <Link href={`/video/${video.path ?? ""}`}>
-              {video.thumbnail && (
+            {video.thumbnail && (
+              <Link href={`/video/${video.path ?? ""}`}>
                 <StorageImage
                   path={video.thumbnail}
                   // width={400}
                   height={400}
                   alt={video?.sortKey?.split("_")[0]}
                 />
-              )}
-              <p>{video?.sortKey?.split("_")[0]}</p>
+              </Link>
+            )}
+            <p>{video?.sortKey?.split("_")[0]}</p>
+            <Link href={`/channel/${video.channel ?? ""}`}>
+              <p>{video?.dn ?? ""}</p>
             </Link>
           </li>
         ))}

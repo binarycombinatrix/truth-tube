@@ -1,5 +1,4 @@
 import { GetStaticPaths, GetStaticProps } from "next";
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { generateClient } from "aws-amplify/data";
@@ -45,13 +44,17 @@ export const getStaticProps: GetStaticProps<VideoProps> = async ({
 }) => {
   const { path } = params as { path: string };
   console.log("url path ==>", path);
-  const dpath = decodeURIComponent(path);
+  const dpath = "v#" + decodeURIComponent(path);
 
   try {
     if (dpath) {
       const { data, errors } = await client.models.Video.list({
-        partitionKey: dpath,
+        partitionKey: "Educational",
+        sortKey: {
+          beginsWith: dpath,
+        },
       });
+
       if (errors) {
         console.error(errors);
       } else if (data) {
@@ -61,8 +64,8 @@ export const getStaticProps: GetStaticProps<VideoProps> = async ({
           );
 
           const sArr = video.sortKey.split("_");
-          sArr.shift();
-          const channel = sArr.join("_");
+          // sArr.shift();
+          const channel = sArr[1];
           return { ...video, path: atag, channel };
         });
         return {
@@ -127,7 +130,7 @@ export default function App({ data }: VideoProps) {
 
   return (
     <main>
-      <h1>Channel videos</h1>
+      <h1>Search results</h1>
       {/* <button onClick={createTodo}>+ new</button> */}
       <ul>
         {data &&
@@ -144,9 +147,9 @@ export default function App({ data }: VideoProps) {
                   />
                 </Link>
               )}
-              <p>{video?.sortKey?.split("_")[0]}</p>
+              <h2 className="card-title">{video?.sortKey?.split(/[_#]/)[1]}</h2>
               <Link href={`/channel/${video.channel ?? ""}`}>
-                <p>{video?.dn ?? ""}</p>
+                <p className="card-channel">{video?.dn ?? ""}</p>
               </Link>
             </li>
           ))}

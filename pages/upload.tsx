@@ -90,7 +90,7 @@ export default function Upload() {
         const { errors, data: video } = await client.models.Video.create({
           partitionKey: "Educational",
           sortKey:
-            "v#" + title + "_" + localStorage.getItem("dn") + "_" + tUUID,
+            "v#" + title + "_" + localStorage.getItem("username") + "_" + tUUID,
           type: "video",
           thumbnail: thumbnailPath,
           url: filePath,
@@ -107,12 +107,14 @@ export default function Upload() {
           const { errors, data: user_video } = await client.models.Video.create(
             {
               partitionKey:
-                "u#" +
-                (localStorage.getItem("dn") ?? "Educational") +
+                "u#" + (localStorage.getItem("username") ?? "Educational"),
+              sortKey:
+                "v#" +
+                title +
+                "_" +
+                localStorage.getItem("username") +
                 "_" +
                 tUUID,
-              sortKey:
-                "v#" + title + "_" + localStorage.getItem("dn") + "_" + tUUID,
               category: "Educational",
               type: "user",
               thumbnail: thumbnailPath,

@@ -1,19 +1,182 @@
 body {
+  box-sizing: border-box;
   margin: 0;
-  background: linear-gradient(180deg, rgb(117, 81, 194), rgb(255, 255, 255));
+  padding: 0;
+  background: radial-gradient(yellow, black);
+  /* backdrop-filter: blur(7rem); */
+  background-attachment: fixed;
+  color: #dadbf9;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
 }
+
+/* .blur {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 12rem;
+  width: 12rem;
+  background-color: yellow;
+  filter: blur(100px);
+  border-radius: 100px;
+  z-index: -999999999;
+} */
 
 main {
-  /* display: flex;
-  flex-direction: column; */
-  /* align-items: stretch; */
+  /* margin: 10px; */
 }
 
+a {
+  text-decoration: none; /* Remove underline */
+  color: inherit; /* Inherit color from parent */
+}
+
+/* Optional: Add any other styles you want */
+a:hover {
+  color: blue; /* Change color on hover */
+}
+
+.clickable {
+  cursor: pointer;
+}
+.navbar {
+  background-color: rgba(0, 0, 0, 0.895);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1vw 2vw;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar div {
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 700px;
+  /* padding: 0 1.5em; */
+}
+input[type="search"] {
+  font-size: 1em;
+  border-top-left-radius: 1.5em;
+  border-bottom-left-radius: 1.5em;
+  height: 3rem;
+  width: 100%;
+  min-width: 35vw;
+}
+
+.menu-button {
+  width: 15vw;
+  max-width: 3rem;
+}
+
+.menu-image {
+  max-width: 100%;
+}
+.logo {
+  display: block;
+  width: 30vw;
+  max-width: 10rem;
+  /* max-width: 73px;
+  min-width: 50px; */
+  margin: -15% 0;
+}
+
+.navbar button {
+  height: 3rem;
+  width: 5vw;
+  max-width: 50px;
+  border-radius: 0;
+  border-top-right-radius: 1.5em;
+  border-bottom-right-radius: 1.5em;
+  border: solid 1px rgb(255, 255, 0);
+  position: relative;
+}
+
+.navbar button img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 70%;
+  height: auto;
+}
+
+.navbar .card-dp {
+  display: none;
+}
+
+.sidebar {
+  /* display: none; */
+  background-color: rgba(0, 0, 0, 0.895);
+  position: fixed;
+  height: 100%;
+  width: 100vw;
+  max-width: 20rem;
+  /* display: flex; */
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: -9999;
+  left: -150vw;
+  transition: transform 0.5s ease; /* Transition for smooth effect */
+}
+
+.show-sidebar {
+  transform: translateX(150vw);
+  opacity: 1;
+  display: flex;
+  z-index: 9999;
+}
+
+.sidebar-close {
+  width: 100%;
+}
+.sidebar h1 {
+  margin: 0 1.5rem 1rem 0;
+  text-align: right;
+}
+
+/* .sidebar-logo-container {
+  margin: 1.5rem 0.5rem 0 0.5rem;
+} */
+
+.sidebar-logo {
+  display: block;
+  width: 8rem;
+  margin: -15% -10%;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  width: 100%;
+  margin: 1rem 0.5rem 0 0;
+  padding-inline-start: 0.5rem;
+}
+
+.sidebar li a {
+  margin: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: white;
+  font-weight: bold;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  width: 100%;
+}
 button {
-  border-radius: 8px;
+  border-radius: 1em;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
@@ -32,11 +195,12 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-ul {
+main ul {
   padding-inline-start: 0;
   margin-block-start: 0;
   margin-block-end: 0;
   list-style-type: none;
+  margin-top: 20px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   margin: 8px 0;
@@ -44,20 +208,66 @@ ul {
   overflow: auto;
 }
 
-li {
-  display: flex;
-  justify-content: center;
-  background-color: white;
+main li {
+  background-color: rgba(255, 255, 255, 0.406);
+  padding: 0 1rem 1rem 1rem;
+  margin: 1rem 1rem 1rem 1rem;
   /* padding: 8px; */
-  border-radius: 0 0 10px 10px;
-  border: 1px solid black;
+  /* display: flex;
+  flex-direction: column;
+  align-items: center; */
+  border-radius: 10px;
+  box-shadow: inset 0 0 20px 4px rgba(255, 255, 255, 0.829);
+  /* border: 1px solid gold; */
+  /* box-shadow: 0px 0px 5px gold; */
 }
 
 li:hover {
-  background: #dadbf9;
+  background: #acafffb2;
 }
 
+.thumbnail-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+li .thumbnailImage {
+  padding: 0;
+  border-radius: 10px;
+}
+
+.card-details {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  justify-items: flex-end;
+}
+
+.card-title {
+  color: #000000;
+  text-align: left;
+}
+
+.card-dp {
+  height: 4rem;
+  margin-left: 1rem;
+  border: 2px solid white;
+  border-radius: 50%;
+}
 a {
   font-weight: 800;
   text-decoration: none;
+}
+
+@media screen and (min-width: 768px) {
+  .logo {
+    display: block;
+    width: 10rem;
+    margin: -15% 0;
+  }
+
+  .navbar .card-dp {
+    display: block;
+  }
 }

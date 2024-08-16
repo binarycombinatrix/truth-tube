@@ -47,8 +47,8 @@ export default function App() {
           );
 
           const sArr = video.sortKey.split("_");
-          sArr.shift();
-          const channel = sArr.join("_");
+          // sArr.shift();
+          const channel = sArr[1];
           return { ...video, path: atag, channel };
         });
 
@@ -77,8 +77,9 @@ export default function App() {
         {videos.map((video) => (
           <li key={video.sortKey}>
             {video.thumbnail && (
-              <Link href={`/video/${video.path ?? ""}`}>
+              <Link className="thumbnail" href={`/video/${video.path ?? ""}`}>
                 <StorageImage
+                  className="thumbnailImage"
                   path={video.thumbnail}
                   // width={400}
                   height={400}
@@ -86,9 +87,9 @@ export default function App() {
                 />
               </Link>
             )}
-            <p>{video?.sortKey?.split("_")[0]}</p>
+            <h2 className="card-title">{video?.sortKey?.split(/[_#]/)[1]}</h2>
             <Link href={`/channel/${video.channel ?? ""}`}>
-              <p>{video?.dn ?? ""}</p>
+              <p className="card-channel">{video?.dn ?? ""}</p>
             </Link>
           </li>
         ))}

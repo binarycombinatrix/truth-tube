@@ -4,6 +4,7 @@ import { getUrl } from "aws-amplify/storage";
 import { generateClient } from "aws-amplify/api";
 import { type Schema } from "@/amplify/data/resource";
 import VideoPlayer from "../../components/videoplayer";
+import Comments from "@/components/comments";
 // pages/video/[path].tsx
 
 const client = generateClient<Schema>();
@@ -86,15 +87,20 @@ export const getStaticProps: GetStaticProps<VideoProps> = async ({
 };
 
 const VideoPage = ({ data }: VideoProps) => {
+  console.log("data from dynamoDB =>", data);
   return (
     <div>
-      <h1>{data?.sortKey ?? ""}</h1>
-      <VideoPlayer
-        url={data?.url ?? ""}
-        title={data?.sortKey ?? ""}
-        thumbnail={data?.thumbnail ?? ""}
-      />
-      {/* <p>{videoData.description}</p> */}
+      {data && (
+        <>
+          <h1>{data?.sortKey ?? ""}</h1>
+          <VideoPlayer
+            url={data?.url ?? ""}
+            title={data?.sortKey ?? ""}
+            thumbnail={data?.thumbnail ?? ""}
+          />
+          <Comments video={data} />
+        </>
+      )}
     </div>
   );
 };

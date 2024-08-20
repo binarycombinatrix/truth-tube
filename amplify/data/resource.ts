@@ -1,22 +1,101 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 
 const schema = a.schema({
+  Comment: a.customType({
+    content: a.string().required(),
+    username: a.string().required(),
+    dp: a.string().required(),
+    dn: a.string().required(),
+  }),
   Video: a
     .model({
-      partitionKey: a.string().required(),
-      sortKey: a.string().required(), ////video title or username   + uuidv1
-      type: a.string().required(), ///specify type to avoid confusion
-      category: a.string(), /// category which is partition key for video entry
-      debate: a.json().array(), ///debate of the video
-      description: a.string(), ///channel or video description
-      url: a.string(), ///video url
-      thumbnail: a.string(), ///video thumbnail
-      dp: a.string(), ///user dp can store in both cases,
-      comment: a.json().array(), ///only in case of video
-      dn: a.string(), //channel name
+      partitionKey: a
+        .string()
+        .required()
+        .authorization((allow) => [
+          allow.publicApiKey().to(["read"]),
+          allow.authenticated().to(["read", "create"]),
+          allow.owner(),
+        ]),
+      sortKey: a
+        .string()
+        .required()
+        .authorization((allow) => [
+          allow.publicApiKey().to(["read"]),
+          allow.authenticated().to(["read", "create"]),
+          allow.owner(),
+        ]),
+      type: a
+        .string()
+        .required()
+        .authorization((allow) => [
+          allow.publicApiKey().to(["read"]),
+          allow.authenticated().to(["read", "create"]),
+          allow.owner(),
+        ]),
+      comment: a
+        .ref("Comment")
+        .array()
+        .authorization((allow) => [
+          allow.publicApiKey().to(["read"]),
+          allow.authenticated().to(["read", "create"]),
+          allow.owner(),
+        ]),
+      debate: a
+        .json()
+        .array()
+        .authorization((allow) => [
+          allow.publicApiKey().to(["read"]),
+          allow.owner(),
+        ]),
+      category: a
+        .string()
+        .authorization((allow) => [
+          allow.publicApiKey().to(["read"]),
+          allow.owner(),
+        ]),
+      description: a
+        .string()
+        .authorization((allow) => [
+          allow.publicApiKey().to(["read"]),
+          allow.owner(),
+        ]),
+      url: a
+        .string()
+        .authorization((allow) => [
+          allow.publicApiKey().to(["read"]),
+          allow.owner(),
+        ]),
+      thumbnail: a
+        .string()
+        .authorization((allow) => [
+          allow.publicApiKey().to(["read"]),
+          allow.owner(),
+        ]),
+      dp: a
+        .string()
+        .authorization((allow) => [
+          allow.publicApiKey().to(["read"]),
+          allow.owner(),
+        ]),
+      dn: a
+        .string()
+        .authorization((allow) => [
+          allow.publicApiKey().to(["read"]),
+          allow.owner(),
+        ]),
+      username: a
+        .string()
+        .authorization((allow) => [
+          allow.publicApiKey().to(["read"]),
+          allow.owner(),
+        ]),
     })
     .identifier(["partitionKey", "sortKey"])
-    .authorization((allow) => [allow.publicApiKey()]),
+    .authorization((allow) => [
+      allow.publicApiKey().to(["read"]),
+      allow.owner(),
+    ]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
@@ -31,32 +110,3 @@ export const data = defineData({
     },
   },
 });
-
-/*== STEP 2 ===============================================================
-Go to your frontend source code. From your client-side code, generate a
-Data client to make CRUDL requests to your table. (THIS SNIPPET WILL ONLY
-WORK IN THE FRONTEND CODE FILE.)
-
-Using JavaScript or Next.js React Server Components, Middleware, Server 
-Actions or Pages Router? Review how to generate Data clients for those use
-cases: https://docs.amplify.aws/gen2/build-a-backend/data/connect-to-API/
-=========================================================================*/
-
-/*
-"use client"
-import { generateClient } from "aws-amplify/data";
-import type { Schema } from "@/amplify/data/resource";
-
-const client = generateClient<Schema>() // use this Data client for CRUDL requests
-*/
-
-/*== STEP 3 ===============================================================
-Fetch records from the database and use them in your frontend component.
-(THIS SNIPPET WILL ONLY WORK IN THE FRONTEND CODE FILE.)
-=========================================================================*/
-
-/* For example, in a React component, you can use this snippet in your
-  function's RETURN statement */
-// const { data: todos } = await client.models.Todo.list()
-
-// return <ul>{todos.map(todo => <li key={todo.id}>{todo.content}</li>)}</ul>

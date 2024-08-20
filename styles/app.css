@@ -250,11 +250,18 @@ li .thumbnailImage {
 }
 
 .card-dp {
+  height: 4rem !important;
+  margin-left: 1rem !important;
+  border: 2px solid white !important;
+  border-radius: 50% !important;
+}
+
+/* .amplify-image {
   height: 4rem;
   margin-left: 1rem;
   border: 2px solid white;
   border-radius: 50%;
-}
+} */
 a {
   font-weight: 800;
   text-decoration: none;

@@ -1,7 +1,12 @@
+"use client";
 import type { FormEvent } from "react";
 import { signUp, confirmSignUp } from "aws-amplify/auth";
 import { useState, useEffect } from "react";
+import { generateClient } from "aws-amplify/data";
+import type { Schema } from "@/amplify/data/resource";
 import Toast from "../components/toast";
+
+const client = generateClient<Schema>();
 
 interface SignUpFormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;
@@ -56,8 +61,23 @@ export default function App() {
         confirmationCode: form.elements.code.value,
       });
       if (confirmSignUpResult.nextStep) {
+        // const { errors, data: user_video } = await client.models.Video.create({
+        //   partitionKey: form.elements.email.value,
+        //   sortKey: form.elements.email.value,
+        //   type: "user_account",
+        // });
+
+        // if (user_video) {
+        // console.log("Video data added:", user_video);
         setType("success");
         setMessage("Account created successfully");
+        // } else {
+        //   console.log("Sign up error: ", errors);
+        //   setType("error");
+        //   setMessage("Sign up error: " + errors);
+        // }
+        ///
+
         console.log("sign up success=>`", confirmSignUpResult);
       }
     } catch (err) {

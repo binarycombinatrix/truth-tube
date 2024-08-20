@@ -82,52 +82,8 @@ export const getStaticProps: GetStaticProps<VideoProps> = async ({
   };
 };
 export default function App({ data }: VideoProps) {
-  //   const [videos, setVideos] = useState<Array<VideoObject>>([]);
-
-  //   async function listVideos() {
-  //     // client.models.Video.observeQuery().subscribe({
-  //     //   next: (data) => setVideos([...data.items]),
-  //     // });
-
-  //     try {
-  //       const { data: vids, errors } = await client.models.Video.list({
-  //         partitionKey: "Educational",
-  //       });
-
-  //       if (errors) {
-  //         console.error(errors);
-  //       } else {
-  //         console.log("data from dynamoDB =>", vids);
-
-  //         const vidArr = vids.map((video) => {
-  //           const atag = encodeURIComponent(
-  //             video.partitionKey + "_" + video.sortKey
-  //           );
-
-  //           return { ...video, path: atag };
-  //         });
-
-  //         setVideos(vidArr);
-  //       }
-  //     } catch (error) {
-  //       console.log("couldn't get videos=>", error);
-  //     }
-  //   }
-
-  //   useEffect(() => {
-  //     listVideos();
-  //   }, []);
-
-  // function createTodo() {
-  // client.models.Video.create({
-  //   content: window.prompt("Todo content"),
-  // });
-  // }
-
   return (
     <main>
-      {/* <h1>Channel videos</h1> */}
-      {/* <button onClick={createTodo}>+ new</button> */}
       <ul>
         {data &&
           data?.length > 0 &&
@@ -148,14 +104,27 @@ export default function App({ data }: VideoProps) {
               )}
               <div className="card-details">
                 <span>
-                  <img className="card-dp" src="/narsimha.jpg" alt="narsimha" />
+                  {video?.dp ? (
+                    <StorageImage
+                      className="card-dp"
+                      path={video.dp ?? ""}
+                      fallbackSrc="/profile.svg"
+                      alt="Profile"
+                    />
+                  ) : (
+                    <img
+                      className="card-dp"
+                      src="/profile.svg"
+                      alt="narsimha"
+                    />
+                  )}
                 </span>
                 <span>
                   <h2 className="card-title">
                     {video?.sortKey?.split(/[_#]/)[1]}
                   </h2>
                   <Link href={`/channel/${video.channel ?? ""}`}>
-                    <p className="card-channel">{video?.dn ?? ""}</p>
+                    <div className="card-channel">{video?.dn ?? ""}</div>
                   </Link>
                 </span>
               </div>

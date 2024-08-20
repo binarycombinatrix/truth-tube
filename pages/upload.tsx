@@ -86,20 +86,24 @@ export default function Upload() {
     const tUUID = uuidv1();
 
     try {
-      if (localStorage.getItem("username")) {
-        const { errors, data: video } = await client.models.Video.create({
-          partitionKey: "Educational",
-          sortKey:
-            "v#" + title + "_" + localStorage.getItem("username") + "_" + tUUID,
-          type: "video",
-          thumbnail: thumbnailPath,
-          url: filePath,
-          dp: localStorage.getItem("dp") ?? "",
-          dn:
-            localStorage.getItem("dn") ??
-            localStorage.getItem("username") ??
-            "",
-        });
+      if (localStorage.getItem("username") && localStorage.getItem("dn")) {
+        const { errors, data: video } = await client.models.Video.create(
+          {
+            partitionKey: "Educational",
+            sortKey: "v#" + title + "_" + localStorage.getItem("username"),
+            type: "video",
+            thumbnail: thumbnailPath,
+            url: filePath,
+            dp: localStorage.getItem("dp") ?? "",
+            dn:
+              localStorage.getItem("dn") ??
+              localStorage.getItem("username") ??
+              "",
+          },
+          {
+            authMode: "userPool",
+          }
+        );
 
         if (errors) console.log(" Error1 in adding video data to DB:", errors);
 
@@ -108,13 +112,7 @@ export default function Upload() {
             {
               partitionKey:
                 "u#" + (localStorage.getItem("username") ?? "Educational"),
-              sortKey:
-                "v#" +
-                title +
-                "_" +
-                localStorage.getItem("username") +
-                "_" +
-                tUUID,
+              sortKey: "v#" + title + "_" + localStorage.getItem("username"),
               category: "Educational",
               type: "user",
               thumbnail: thumbnailPath,
@@ -123,6 +121,9 @@ export default function Upload() {
                 localStorage.getItem("dn") ??
                 localStorage.getItem("username") ??
                 "",
+            },
+            {
+              authMode: "userPool",
             }
           );
           console.log("Video data added:", user_video);

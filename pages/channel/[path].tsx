@@ -55,9 +55,7 @@ export const getStaticProps: GetStaticProps<VideoProps> = async ({
         console.error(errors);
       } else if (data) {
         const vidArr = data.map((video) => {
-          const atag = encodeURIComponent(
-            video.partitionKey + "_" + video.sortKey
-          );
+          const atag = encodeURIComponent("Educational" + "_" + video.sortKey);
 
           const sArr = video.sortKey.split("_");
           // sArr.shift();
@@ -84,11 +82,11 @@ export const getStaticProps: GetStaticProps<VideoProps> = async ({
 export default function App({ data }: VideoProps) {
   return (
     <main>
-      <ul>
+      <ul className="video-list">
         {data &&
           data?.length > 0 &&
           data.map((video) => (
-            <li key={video.sortKey}>
+            <li key={video.sortKey} className="video-card">
               {video.thumbnail && (
                 <div className="thumbnail-container">
                   <Link href={`/video/${video.path ?? ""}`}>
@@ -132,7 +130,6 @@ export default function App({ data }: VideoProps) {
           ))}
       </ul>
       <div>
-        🥳
         <br />
       </div>
     </main>

@@ -10,6 +10,11 @@ const client = generateClient<Schema>();
 interface CreateFormElements extends HTMLFormControlsCollection {
   title: HTMLInputElement;
   description: HTMLInputElement;
+  content: HTMLInputElement;
+  dn: HTMLInputElement;
+  self: HTMLInputElement;
+  links: HTMLInputElement;
+  // dp: HTMLInputElement;
 }
 
 interface CreateForm extends HTMLFormElement {
@@ -17,6 +22,18 @@ interface CreateForm extends HTMLFormElement {
 }
 
 export default function Upload() {
+  const [debate, setDebate] = useState<Schema["Argument"]["type"]>({
+    content: "",
+    self: false,
+    dp: "",
+    dn: "",
+    links: [],
+  });
+  const [link, setLink] = useState("");
+  const [debateArr, setDebateArr] = useState<Schema["Argument"]["type"][] | []>(
+    []
+  );
+  const [opFile, setOpFile] = useState<File | null>(null);
   const [file, setFile] = useState<File | null>(null); // Specify the type for the file state
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [filePath, setFilePath] = useState<string>("");
@@ -25,6 +42,36 @@ export default function Upload() {
     if (event.target.files) {
       setFile(event.target.files[0]);
     }
+  };
+
+  const handleOpChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setOpFile(event.target.files[0]);
+    }
+  };
+
+  const handleLink = () => {
+    const oldDebate = { ...debate };
+    const newLinks = oldDebate.links ? [...oldDebate.links, link] : [link];
+    setDebate({
+      ...oldDebate,
+      links: newLinks,
+    });
+    setLink("");
+  };
+
+  const handleDebate = () => {
+    const newDebateArr = [...debateArr, debate];
+    console.log("newDebateArr", newDebateArr);
+    setDebateArr(newDebateArr);
+    setDebate({
+      content: "",
+      self: false,
+      dp: "",
+      dn: "",
+      links: [],
+    });
+    setOpFile(null);
   };
 
   const handleThumbnailChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -75,11 +122,35 @@ export default function Upload() {
     }
   };
 
+  const handleOpUpload = async () => {
+    if (opFile) {
+      try {
+        const uploadres = await uploadData({
+          path: ({ identityId }) => `dp/${identityId}/${opFile.name}`,
+          data: opFile,
+        });
+        if (uploadres) {
+          const fpath = (await uploadres?.result)?.path ?? "";
+          setDebate({ ...debate, dp: fpath });
+          alert("Upload successful!" + fpath);
+          console.log("the dp of the op is ", fpath);
+        } else {
+          console.log("error in uploading dp: please reupload the file");
+          alert("Upload failed. Please try again.");
+        }
+      } catch (error) {
+        console.log("error in uploading dp: please reupload the file");
+      }
+    } else {
+      alert("Please select a file to upload.");
+    }
+  };
   const handleSubmit = async (event: React.FormEvent<CreateForm>) => {
     event.preventDefault();
 
     const form = event.currentTarget; // Get the form element
     const title = form.elements.title.value;
+
     // const title = tInp.replace(/ +/g, (match) => "_".repeat(match.length));
     // Access title input value
     const description = form.elements.description.value; // Access description textarea value
@@ -99,6 +170,7 @@ export default function Upload() {
               localStorage.getItem("dn") ??
               localStorage.getItem("username") ??
               "",
+            debate: debateArr,
           },
           {
             authMode: "userPool",
@@ -106,6 +178,9 @@ export default function Upload() {
         );
 
         if (errors) console.log(" Error1 in adding video data to DB:", errors);
+        else {
+          console.log("New video added: |> ", video);
+        }
 
         if (video) {
           const { errors, data: user_video } = await client.models.Video.create(
@@ -173,6 +248,61 @@ export default function Upload() {
             required
           />
         </div>
+        <div>
+          <label htmlFor="content">Content:</label>
+          <textarea
+            id="content"
+            name="content" // Add name attribute for form.elements access
+            // required
+            value={debate.content}
+            onChange={(e) => setDebate({ ...debate, content: e.target.value })}
+          />
+        </div>
+        <div>
+          <label htmlFor="self">Self:</label>
+          <input
+            type="checkbox"
+            id="self"
+            name="self"
+            checked={debate.self}
+            onChange={(e) => setDebate({ ...debate, self: e.target.checked })}
+          />
+        </div>
+        <div>
+          <label htmlFor="dn">Display name:</label>
+          <textarea
+            id="dn"
+            name="dn" // Add name attribute for form.elements access
+            // required
+            value={debate.dn ?? ""}
+            onChange={(e) => setDebate({ ...debate, dn: e.target.value })}
+          />
+        </div>
+        <div>
+          <label htmlFor="links">Links:</label>
+          <input
+            id="links"
+            name="links" // Add name attribute for form.elements access
+            // required
+            value={link}
+            onChange={(e) => setLink(e.target.value)}
+          />
+          <button type="button" onClick={handleLink}>
+            Add Link
+          </button>
+        </div>
+        <div>
+          <label htmlFor="op">Original poster image:</label>
+          <input type="file" id="op" onChange={handleOpChange} />
+          {/* required  */}
+
+          <button type="button" onClick={handleOpUpload}>
+            Upload Dp
+          </button>
+        </div>
+        <button type="button" onClick={handleDebate}>
+          Add Debate
+        </button>
         <div>
           <label htmlFor="file">Upload Video:</label>
           <input type="file" id="file" onChange={handleFileChange} required />

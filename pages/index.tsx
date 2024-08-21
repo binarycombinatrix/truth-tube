@@ -27,10 +27,6 @@ export default function App() {
   const [videos, setVideos] = useState<Array<VideoObject>>([]);
 
   async function listVideos() {
-    // client.models.Video.observeQuery().subscribe({
-    //   next: (data) => setVideos([...data.items]),
-    // });
-
     try {
       const { data: vids, errors } = await client.models.Video.list({
         partitionKey: "Educational",
@@ -73,33 +69,56 @@ export default function App() {
     <main>
       <h1>My videos</h1>
       {/* <button onClick={createTodo}>+ new</button> */}
-      <ul>
-        {videos.map((video) => (
-          <li key={video.sortKey}>
-            {video.thumbnail && (
-              <Link className="thumbnail" href={`/video/${video.path ?? ""}`}>
-                <StorageImage
-                  className="thumbnailImage"
-                  path={video.thumbnail}
-                  // width={400}
-                  height={400}
-                  alt={video?.sortKey?.split("_")[0]}
-                />
-              </Link>
-            )}
-            <h2 className="card-title">{video?.sortKey?.split(/[_#]/)[1]}</h2>
-            <Link href={`/channel/${video.channel ?? ""}`}>
-              <p className="card-channel">{video?.dn ?? ""}</p>
-            </Link>
-          </li>
-        ))}
+      <ul className="video-list">
+        {videos &&
+          videos?.length > 0 &&
+          videos.map((video) => (
+            <li key={video.sortKey} className="video-card">
+              {video.thumbnail && (
+                <div className="thumbnail-container">
+                  <Link href={`/video/${video.path ?? ""}`}>
+                    <StorageImage
+                      path={video.thumbnail}
+                      // width={400}
+                      className="thumbnailImage"
+                      height={400}
+                      alt={video?.sortKey?.split("_")[0]}
+                    />
+                  </Link>
+                </div>
+              )}
+              <div className="card-details">
+                <span>
+                  {video?.dp ? (
+                    <StorageImage
+                      className="card-dp"
+                      path={video.dp ?? ""}
+                      fallbackSrc="/profile.svg"
+                      alt="Profile"
+                    />
+                  ) : (
+                    <img
+                      className="card-dp"
+                      src="/profile.svg"
+                      alt="narsimha"
+                    />
+                  )}
+                </span>
+                <span>
+                  <h2 className="card-title">
+                    {video?.sortKey?.split(/[_#]/)[1]}
+                  </h2>
+                  <Link href={`/channel/${video.channel ?? ""}`}>
+                    <div className="card-channel">{video?.dn ?? ""}</div>
+                  </Link>
+                </span>
+              </div>
+            </li>
+          ))}
       </ul>
       <div>
-        🥳 App successfully hosted. Try creating a new todo.
+        🥳 Try creating a new video!
         <br />
-        <a href="https://docs.amplify.aws/gen2/start/quickstart/nextjs-pages-router/">
-          Review next steps of this tutorial.
-        </a>
       </div>
     </main>
   );

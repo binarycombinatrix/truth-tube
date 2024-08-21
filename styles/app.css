@@ -195,7 +195,7 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-main ul {
+.video-list {
   padding-inline-start: 0;
   margin-block-start: 0;
   margin-block-end: 0;
@@ -208,7 +208,7 @@ main ul {
   overflow: auto;
 }
 
-main li {
+.video-card {
   background-color: rgba(255, 255, 255, 0.406);
   padding: 0 1rem 1rem 1rem;
   margin: 1rem 1rem 1rem 1rem;

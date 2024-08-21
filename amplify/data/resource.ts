@@ -7,6 +7,13 @@ const schema = a.schema({
     dp: a.string().required(),
     dn: a.string().required(),
   }),
+  Argument: a.customType({
+    content: a.string().required(),
+    self: a.boolean().required(),
+    dp: a.string(),
+    dn: a.string(),
+    links: a.string().array(),
+  }),
   Video: a
     .model({
       partitionKey: a
@@ -42,7 +49,7 @@ const schema = a.schema({
           allow.owner(),
         ]),
       debate: a
-        .json()
+        .ref("Argument")
         .array()
         .authorization((allow) => [
           allow.publicApiKey().to(["read"]),

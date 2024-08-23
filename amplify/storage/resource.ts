@@ -1,4 +1,4 @@
-import { defineStorage } from "@aws-amplify/backend";
+import { defineStorage } from "@aws-amplify/backend"
 
 export const storage = defineStorage({
   name: "videoDrive",
@@ -9,6 +9,7 @@ export const storage = defineStorage({
     ],
     "dp/{entity_id}/*": [
       allow.guest.to(["read"]),
+      allow.authenticated.to(["read"]),
       allow.entity("identity").to(["read", "write", "delete"]),
     ],
     "thumbnails/*": [
@@ -16,4 +17,4 @@ export const storage = defineStorage({
       allow.authenticated.to(["read", "write", "delete"]),
     ],
   }),
-});
+})

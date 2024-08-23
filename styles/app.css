@@ -1,31 +1,15 @@
+/* like ,subscribe, search fix only to lowercase*/
 body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  background: radial-gradient(yellow, black);
+  background: radial-gradient(yellow, rgb(192, 128, 0));
   /* backdrop-filter: blur(7rem); */
   background-attachment: fixed;
-  color: #dadbf9;
+  color: #000000;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   height: 100%;
   width: 100%;
-}
-
-/* .blur {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  height: 12rem;
-  width: 12rem;
-  background-color: yellow;
-  filter: blur(100px);
-  border-radius: 100px;
-  z-index: -999999999;
-} */
-
-main {
-  /* margin: 10px; */
 }
 
 a {
@@ -202,26 +186,31 @@ button:focus-visible {
   list-style-type: none;
   margin-top: 20px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  margin: 8px 0;
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  margin: 0rem 0.5rem;
+  gap: 1rem;
   overflow: auto;
 }
 
 .video-card {
-  background-color: rgba(255, 255, 255, 0.406);
-  padding: 0 1rem 1rem 1rem;
-  margin: 1rem 1rem 1rem 1rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding-bottom: 1rem;
+  /* margin: 1rem 1rem 1rem 1rem; */
   /* padding: 8px; */
   /* display: flex;
   flex-direction: column;
   align-items: center; */
   border-radius: 10px;
-  box-shadow: inset 0 0 20px 4px rgba(255, 255, 255, 0.829);
+  box-shadow: inset 0 0 15px 4px rgba(255, 255, 255, 0.7);
   /* border: 1px solid gold; */
   /* box-shadow: 0px 0px 5px gold; */
 }
 
+.thumbnailImage {
+  /* width: 100% !important; */
+  object-fit: cover !important;
+  aspect-ratio: 16 / 9 !important;
+}
 li:hover {
   background: #acafffb2;
 }
@@ -238,6 +227,7 @@ li .thumbnailImage {
 }
 
 .card-details {
+  margin: 0.5rem 0 0 0.5rem;
   display: flex;
   gap: 1.5rem;
   align-items: center;
@@ -247,10 +237,14 @@ li .thumbnailImage {
 .card-title {
   color: #000000;
   text-align: left;
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
 .card-dp {
   height: 4rem !important;
+  max-width: 4rem !important;
+  object-fit: cover !important;
   margin-left: 1rem !important;
   border: 2px solid white !important;
   border-radius: 50% !important;
@@ -265,16 +259,105 @@ li .thumbnailImage {
 a {
   font-weight: 800;
   text-decoration: none;
+  color: rgb(47, 1, 77);
 }
 
-@media screen and (min-width: 768px) {
+.upload-form {
+  font-weight: 500;
+  display: grid;
+  margin: 2rem;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.upload-form button {
+  /* display: inline-block; */
+  margin: auto;
+  text-align: right;
+  /* justify-self: flex-end; */
+}
+
+.submit-button {
+  background-color: rgb(0, 255, 51);
+  color: rgb(0, 0, 0);
+  font-weight: 700;
+  border: 3px solid rgb(0, 0, 0);
+  padding: 0.5rem 1rem;
+}
+
+.form-group {
+  display: grid;
+  grid-template-columns: 20vw 40vw 20vw;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-group input {
+  border-radius: 1vw;
+}
+
+.form-group textarea {
+  border-radius: 1vw;
+}
+
+.form-group input[type="checkbox"] {
+  width: 20px; /* Set the width of the checkbox */
+  height: 20px; /* Set the height of the checkbox */
+  outline: 2px solid rgb(42, 4, 255); /* Add a border with color and width */
+  border-radius: 0; /* Add rounded corners to the border */
+  background-color: #fff; /* Set the background color of the checkbox */
+  vertical-align: middle;
+}
+
+.upload-preview {
+  display: block !important;
+  margin-top: 0.5rem !important;
+  width: 10vw !important;
+  height: 10vw !important;
+}
+
+.links-list {
+  overflow-x: scroll;
+  max-height: 25vh;
+  overflow-y: scroll;
+  color: #000000;
+}
+
+.debate-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+  font-weight: 900;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-subtitle {
+  text-align: center;
+  color: #000000;
+  font-weight: 900;
+  margin: 0;
+}
+@media screen and (min-width: 680px) {
   .logo {
     display: block;
     width: 10rem;
     margin: -15% 0;
   }
 
+  .video-list {
+    grid-template-columns: repeat(2, minmax(200px, 1fr));
+  }
   .navbar .card-dp {
     display: block;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .video-list {
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   }
 }

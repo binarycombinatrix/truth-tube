@@ -1,4 +1,4 @@
-import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
+import { type ClientSchema, a, defineData } from "@aws-amplify/backend"
 
 const schema = a.schema({
   Comment: a.customType({
@@ -53,48 +53,56 @@ const schema = a.schema({
         .array()
         .authorization((allow) => [
           allow.publicApiKey().to(["read"]),
+          allow.authenticated().to(["read", "create"]),
           allow.owner(),
         ]),
       category: a
         .string()
         .authorization((allow) => [
           allow.publicApiKey().to(["read"]),
+          allow.authenticated().to(["read", "create"]),
           allow.owner(),
         ]),
       description: a
         .string()
         .authorization((allow) => [
           allow.publicApiKey().to(["read"]),
+          allow.authenticated().to(["read", "create"]),
           allow.owner(),
         ]),
       url: a
         .string()
         .authorization((allow) => [
           allow.publicApiKey().to(["read"]),
+          allow.authenticated().to(["read", "create"]),
           allow.owner(),
         ]),
       thumbnail: a
         .string()
         .authorization((allow) => [
           allow.publicApiKey().to(["read"]),
+          allow.authenticated().to(["read", "create"]),
           allow.owner(),
         ]),
       dp: a
         .string()
         .authorization((allow) => [
           allow.publicApiKey().to(["read"]),
+          allow.authenticated().to(["read", "create"]),
           allow.owner(),
         ]),
       dn: a
         .string()
         .authorization((allow) => [
           allow.publicApiKey().to(["read"]),
+          allow.authenticated().to(["read", "create"]),
           allow.owner(),
         ]),
       username: a
         .string()
         .authorization((allow) => [
           allow.publicApiKey().to(["read"]),
+          allow.authenticated().to(["read", "create"]),
           allow.owner(),
         ]),
     })
@@ -103,9 +111,9 @@ const schema = a.schema({
       allow.publicApiKey().to(["read"]),
       allow.owner(),
     ]),
-});
+})
 
-export type Schema = ClientSchema<typeof schema>;
+export type Schema = ClientSchema<typeof schema>
 
 export const data = defineData({
   schema,
@@ -116,4 +124,4 @@ export const data = defineData({
       expiresInDays: 30,
     },
   },
-});
+})

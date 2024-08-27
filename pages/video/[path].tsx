@@ -435,7 +435,9 @@ const VideoPage = ({ data, videoArr, channel }: VideoProps) => {
               title={data?.sortKey ?? ""}
               thumbnail={data?.thumbnail ?? ""}
             />
-            <div className="title">{data?.sortKey?.split(/[_#]/)[1] ?? ""}</div>
+            <div className="title">
+              {data?.title ?? data?.sortKey?.split(/[_#]/)[1] ?? ""}
+            </div>
             <div className="video-dp-section">
               <div className="video-dn">
                 {typeof window !== undefined &&

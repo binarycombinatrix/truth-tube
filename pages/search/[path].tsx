@@ -45,7 +45,7 @@ export const getStaticProps: GetStaticProps<VideoProps> = async ({
 }) => {
   const { path } = params as { path: string }
   console.log("url path ==>", path)
-  const dpath = "v#" + decodeURIComponent(path)
+  const dpath = ("v#" + decodeURIComponent(path)).toLowerCase()
 
   try {
     if (dpath) {
@@ -139,7 +139,6 @@ export default function App({ data }: VideoProps) {
           data.map((video) => <VideoCard key={video.sortKey} video={video} />)}
       </ul>
       <div>
-        🥳
         <br />
       </div>
     </main>

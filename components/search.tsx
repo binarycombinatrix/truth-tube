@@ -1,22 +1,22 @@
-"use client";
-import Link from "next/link";
-import Image from "next/image";
-import { StorageImage } from "@aws-amplify/ui-react-storage";
-import { useState, useEffect } from "react";
+"use client"
+import Link from "next/link"
+import Image from "next/image"
+import { StorageImage } from "@aws-amplify/ui-react-storage"
+import { useState, useEffect } from "react"
 
 export default function Search() {
-  const [searchText, setSearchText] = useState("");
-  const [showSidebar, setShowSidebar] = useState(false);
-  const [client, setClient] = useState(false);
+  const [searchText, setSearchText] = useState("")
+  const [showSidebar, setShowSidebar] = useState(false)
+  const [client, setClient] = useState(false)
 
   useEffect(() => {
     if (typeof window !== undefined) {
-      setClient(true);
+      setClient(true)
     }
-  }, []);
+  }, [])
 
   if (!client) {
-    return null;
+    return null
   } else
     return (
       <>
@@ -90,6 +90,35 @@ export default function Search() {
               </Link>
             </li>
           </ul>
+
+          <div style={{ width: "100%" }}>
+            <hr />
+          </div>
+
+          <div className="subbed-channels">
+            <div className="title">
+              <span>Subscriptions</span>
+            </div>
+            <ul>
+              {typeof window !== undefined &&
+                localStorage.getItem("subbedto") &&
+                JSON.parse(localStorage.getItem("subbedto") ?? "").map(
+                  (c: any) => (
+                    <li key={c.username}>
+                      <Link href={`/channel/${c.username}`}>
+                        <StorageImage
+                          className="card-dp"
+                          path={c.dp ?? ""}
+                          fallbackSrc="/profile.svg"
+                          alt="Profile"
+                        />
+                        <span>{c.dn}</span>
+                      </Link>
+                    </li>
+                  )
+                )}
+            </ul>
+          </div>
         </div>
         <div className="navbar">
           <div>
@@ -141,5 +170,5 @@ export default function Search() {
           )}
         </div>
       </>
-    );
+    )
 }

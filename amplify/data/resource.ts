@@ -63,6 +63,13 @@ const schema = a.schema({
           allow.authenticated().to(["read", "create"]),
           allow.owner(),
         ]),
+      title: a
+        .string()
+        .authorization((allow) => [
+          allow.publicApiKey().to(["read"]),
+          allow.authenticated().to(["read", "create"]),
+          allow.owner(),
+        ]),
       description: a
         .string()
         .authorization((allow) => [

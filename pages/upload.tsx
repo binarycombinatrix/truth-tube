@@ -5,6 +5,7 @@ import { uploadData } from "aws-amplify/storage"
 import { generateClient } from "aws-amplify/data"
 import { type Schema } from "../amplify/data/resource"
 import { StorageImage } from "@aws-amplify/ui-react-storage"
+import Router from "next/router"
 
 const client = generateClient<Schema>()
 
@@ -156,8 +157,8 @@ export default function Upload() {
     event.preventDefault()
 
     const form = event.currentTarget // Get the form element
-    const title = form.elements.title.value
-
+    const title = form.elements.title.value.toLowerCase()
+    const tInp = form.elements.title.value
     // const title = tInp.replace(/ +/g, (match) => "_".repeat(match.length));
     // Access title input value
     const description = form.elements.description.value // Access description textarea value
@@ -178,6 +179,7 @@ export default function Upload() {
               localStorage.getItem("username") ??
               "",
             debate: debateArr,
+            title: tInp,
           },
           {
             authMode: "userPool",
@@ -203,6 +205,7 @@ export default function Upload() {
                 localStorage.getItem("dn") ??
                 localStorage.getItem("username") ??
                 "",
+              title: tInp,
             },
             {
               authMode: "userPool",
@@ -210,8 +213,11 @@ export default function Upload() {
           )
           console.log("Video data added:", user_video)
           if (errors) console.log(" Error2 in adding video data to DB:", errors)
-          if (user_video)
-            alert(`Video uploaded successfully! ${user_video.sortKey}`)
+
+          if (user_video) {
+            alert(`Video uploaded successfully!`)
+            Router.push("/")
+          }
         }
         // Handle form submission logic here
       } else {

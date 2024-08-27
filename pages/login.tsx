@@ -1,6 +1,7 @@
 "use client"
 import type { ChangeEvent, FormEvent, MouseEvent } from "react"
 import { useState, useEffect } from "react"
+import Router from "next/router"
 import { v1 as uuidv1 } from "uuid"
 import { signIn } from "aws-amplify/auth"
 import { generateClient } from "aws-amplify/data"
@@ -272,7 +273,7 @@ export default function Login() {
                 type: "channel_profile",
                 subs: [],
                 username: newUsername,
-                likes: 0,
+                likes: "0",
               },
               {
                 authMode: "userPool",
@@ -294,6 +295,7 @@ export default function Login() {
           localStorage.setItem("username", newUsername)
           localStorage.setItem("dn", profile.dn)
           console.log("Profile data updated:", data)
+          Router.push("/")
           // setProfile({
           //   dn: "",
           //   description: "",

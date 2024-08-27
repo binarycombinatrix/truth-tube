@@ -20,6 +20,7 @@ export interface VideoObject {
   channel?: string | null
   subs?: any
   subbedto?: any
+  title?: string | null
 }
 
 export interface VideoProps {

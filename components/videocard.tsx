@@ -32,7 +32,9 @@ export const VideoCard = ({ video }: { video: VideoObject }) => {
           )}
         </span>
         <span>
-          <div className="card-title">{video?.sortKey?.split(/[_#]/)[1]}</div>
+          <div className="card-title">
+            {video?.title ?? video?.sortKey?.split(/[_#]/)[1]}
+          </div>
           <Link href={`/channel/${video.channel ?? ""}`}>
             <div className="card-channel">{video?.dn ?? ""}</div>
           </Link>

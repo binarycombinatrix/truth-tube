@@ -179,6 +179,13 @@ export default function Login() {
             localStorage.setItem("username", old_user.username)
             localStorage.setItem("dn", old_user.dn)
             localStorage.setItem("dp", old_user.dp)
+            old_user.subbedto &&
+              localStorage.setItem(
+                "subbedto",
+                JSON.stringify(old_user.subbedto)
+              )
+            old_user.likedTo &&
+              localStorage.setItem("likedTo", JSON.stringify(old_user.likedTo))
             setProfile({
               dn: old_user.dn,
               description: old_user.description ?? "",
@@ -197,6 +204,8 @@ export default function Login() {
                 partitionKey: email,
                 sortKey: email,
                 type: "user_profile",
+                subbedto: [],
+                likedTo: [],
               },
               {
                 authMode: "userPool",
@@ -211,6 +220,8 @@ export default function Login() {
           }
           if (new_user) {
             console.log("user created", new_user)
+            localStorage.setItem("subbedto", JSON.stringify(new_user.subbedto))
+            localStorage.setItem("likedTo", JSON.stringify(new_user.likedTo))
             setShowProfile(true)
             setType("info")
             setMessage("Please setup your profile")
@@ -230,7 +241,9 @@ export default function Login() {
       if (email !== "" || localStorage.getItem("email")) {
         const keyval =
           email !== "" ? email : localStorage.getItem("email") ?? ""
-        const newUsername = profile.dn + uuidv1()
+        const newUsername =
+          localStorage.getItem("username") ?? profile.dn + uuidv1()
+
         const { errors, data } = await client.models.Video.update(
           {
             partitionKey: keyval,
@@ -251,12 +264,36 @@ export default function Login() {
           setType("error")
           setMessage("Error updating profile data: " + errors)
         } else {
+          const { data: channelData, errors } =
+            await client.models.Video.create(
+              {
+                partitionKey: "channel",
+                sortKey: newUsername,
+                type: "channel_profile",
+                subs: [],
+                username: newUsername,
+                likes: 0,
+              },
+              {
+                authMode: "userPool",
+              }
+            )
+
+          // if (errors) {
+          //   console.log("Error updating channel data:", errors)
+          //   setType("error")
+          //   setMessage("Error updating channel data: " + errors)
+          // }
+          if (channelData) {
+            console.log("channel profile data added", channelData)
+            setType("success")
+            setMessage("Channel created successfully")
+          }
+
           localStorage.setItem("dp", dpPath)
           localStorage.setItem("username", newUsername)
           localStorage.setItem("dn", profile.dn)
           console.log("Profile data updated:", data)
-          setType("success")
-          setMessage("Profile updated successfully")
           // setProfile({
           //   dn: "",
           //   description: "",

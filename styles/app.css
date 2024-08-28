@@ -58,6 +58,7 @@ input[type="search"] {
 .menu-button {
   width: 15vw;
   max-width: 3rem;
+  cursor: pointer;
 }
 
 .menu-image {
@@ -81,6 +82,7 @@ input[type="search"] {
   border-bottom-right-radius: 1.5em;
   border: solid 1px rgb(255, 255, 0);
   position: relative;
+  cursor: pointer;
 }
 
 .navbar button img {
@@ -169,6 +171,8 @@ input[type="search"] {
   display: flex;
   align-items: center;
   gap: 1rem;
+  justify-content: space-between;
+  margin: 0 0.5rem 0 0;
 }
 
 .title {
@@ -304,6 +308,7 @@ a {
   font-weight: 700;
   border: 3px solid rgb(0, 0, 0);
   padding: 0.5rem 1rem;
+  cursor: pointer;
 }
 
 .form-group {
@@ -444,6 +449,7 @@ a {
 
 .video-dp-section button {
   padding: 0rem 0.5rem;
+  cursor: pointer;
 }
 
 .video-dp-section strong {

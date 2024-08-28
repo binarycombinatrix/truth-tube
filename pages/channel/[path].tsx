@@ -83,7 +83,21 @@ export const getStaticProps: GetStaticProps<VideoProps> = async ({
 export default function App({ data }: VideoProps) {
   return (
     <main>
-      <h1>{data?.[0]?.dn}</h1>
+      <div className="channel-profile">
+        {data?.[0]?.dp ? (
+          <StorageImage
+            className="card-dp"
+            path={data[0].dp ?? ""}
+            fallbackSrc="/profile.svg"
+            alt="Profile"
+          />
+        ) : (
+          <Link href="/login">
+            <img className="card-dp" src="/profile.svg" alt="login" />
+          </Link>
+        )}
+        <h1>{data?.[0]?.dn}</h1>
+      </div>
       <ul className="video-list">
         {data &&
           data?.length > 0 &&

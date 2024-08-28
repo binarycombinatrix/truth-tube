@@ -96,7 +96,7 @@ export default function Search() {
           </div>
 
           <div className="subbed-channels">
-            <div className="title">
+            <div className="subtitle">
               <span>Subscriptions</span>
             </div>
             <ul>

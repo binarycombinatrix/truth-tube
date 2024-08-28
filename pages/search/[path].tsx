@@ -26,6 +26,7 @@ interface VideoObject {
 
 interface VideoProps {
   data: VideoObject[] | null
+  searchTerm: string
 }
 export const getStaticPaths: GetStaticPaths = async () => {
   // Fetch or define your dynamic paths
@@ -46,6 +47,7 @@ export const getStaticProps: GetStaticProps<VideoProps> = async ({
   const { path } = params as { path: string }
   console.log("url path ==>", path)
   const dpath = ("v#" + decodeURIComponent(path)).toLowerCase()
+  // const dpath = "v#" + decodeURIComponent(path)
 
   try {
     if (dpath) {
@@ -72,6 +74,7 @@ export const getStaticProps: GetStaticProps<VideoProps> = async ({
         return {
           props: {
             data: vidArr,
+            searchTerm: path,
           },
         }
       }
@@ -83,57 +86,18 @@ export const getStaticProps: GetStaticProps<VideoProps> = async ({
   return {
     props: {
       data: null,
+      searchTerm: path,
     },
   }
 }
-export default function App({ data }: VideoProps) {
-  //   const [videos, setVideos] = useState<Array<VideoObject>>([]);
-
-  //   async function listVideos() {
-  //     // client.models.Video.observeQuery().subscribe({
-  //     //   next: (data) => setVideos([...data.items]),
-  //     // });
-
-  //     try {
-  //       const { data: vids, errors } = await client.models.Video.list({
-  //         partitionKey: "Educational",
-  //       });
-
-  //       if (errors) {
-  //         console.error(errors);
-  //       } else {
-  //         console.log("data from dynamoDB =>", vids);
-
-  //         const vidArr = vids.map((video) => {
-  //           const atag = encodeURIComponent(
-  //             video.partitionKey + "_" + video.sortKey
-  //           );
-
-  //           return { ...video, path: atag };
-  //         });
-
-  //         setVideos(vidArr);
-  //       }
-  //     } catch (error) {
-  //       console.log("couldn't get videos=>", error);
-  //     }
-  //   }
-
-  //   useEffect(() => {
-  //     listVideos();
-  //   }, []);
-
-  // function createTodo() {
-  // client.models.Video.create({
-  //   content: window.prompt("Todo content"),
-  // });
-  // }
-
+export default function App({ data, searchTerm }: VideoProps) {
   return (
     <main>
-      <h1>Search results</h1>
+      <div className="title">
+        <h3>Search results for: {searchTerm}</h3>
+      </div>
       {/* <button onClick={createTodo}>+ new</button> */}
-      <ul>
+      <ul className="video-list">
         {data &&
           data?.length > 0 &&
           data.map((video) => <VideoCard key={video.sortKey} video={video} />)}

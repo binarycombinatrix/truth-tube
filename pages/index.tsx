@@ -61,7 +61,7 @@ export default function App() {
 
   return (
     <main>
-      <h1>My videos</h1>
+      <h3></h3>
       <ul className="video-list">
         {videos &&
           videos?.length > 0 &&

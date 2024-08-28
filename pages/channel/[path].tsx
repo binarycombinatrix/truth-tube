@@ -26,6 +26,7 @@ interface VideoObject {
 
 interface VideoProps {
   data: VideoObject[] | null
+  path: string
 }
 export const getStaticPaths: GetStaticPaths = async () => {
   // Fetch or define your dynamic paths
@@ -66,6 +67,7 @@ export const getStaticProps: GetStaticProps<VideoProps> = async ({
         return {
           props: {
             data: vidArr,
+            path,
           },
         }
       }
@@ -77,12 +79,18 @@ export const getStaticProps: GetStaticProps<VideoProps> = async ({
   return {
     props: {
       data: null,
+      path,
     },
   }
 }
-export default function App({ data }: VideoProps) {
+export default function App({ data, path }: VideoProps) {
   return (
     <main>
+      {!path && (
+        <div className="title">
+          <h1>Please login and setup your channel</h1>
+        </div>
+      )}
       <div className="channel-profile">
         {data?.[0]?.dp ? (
           <StorageImage

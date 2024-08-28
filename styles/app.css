@@ -144,12 +144,12 @@ input[type="search"] {
   padding-inline-start: 0.5rem;
 }
 
-.sidebar li a {
+.sidebar li :first-child {
   color: white;
-  margin: 1rem;
+  margin: 0.5rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
   font-weight: bold;
 }
 

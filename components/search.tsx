@@ -15,6 +15,11 @@ export default function Search() {
     }
   }, [])
 
+  const logout = () => {
+    localStorage.clear()
+    window.location.reload()
+  }
+
   if (!client) {
     return null
   } else
@@ -83,6 +88,12 @@ export default function Search() {
                 </li>
               )}
 
+            <li>
+              <div onClick={logout}>
+                <Image src="/logout.svg" alt="search" width={30} height={30} />
+                <span>Sign Out</span>
+              </div>
+            </li>
             <li>
               <Link href="/upload">
                 <Image src="/create.svg" alt="search" width={30} height={30} />

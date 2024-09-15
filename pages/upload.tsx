@@ -1,11 +1,12 @@
 // Upload successful! videos/ap-south-1:9576007c-a938-c03d-4615-dbc1b99bc041/RavanHeadReplace.mp4
-import { useState, ChangeEvent } from 'react'
+import { useState, ChangeEvent, useEffect } from 'react'
 import { v1 as uuidv1 } from 'uuid'
 import { uploadData } from 'aws-amplify/storage'
 import { generateClient } from 'aws-amplify/data'
 import { type Schema } from '../amplify/data/resource'
 import { StorageImage } from '@aws-amplify/ui-react-storage'
 import Router from 'next/router'
+import { useRouter } from 'next/navigation'
 
 const client = generateClient<Schema>()
 
@@ -24,6 +25,14 @@ interface CreateForm extends HTMLFormElement {
 }
 
 export default function Upload() {
+  const router = useRouter()
+  useEffect(() => {
+    if (!localStorage.getItem('username') && !localStorage.getItem('dn')) {
+      alert('Please login first')
+      router.push('/login')
+    }
+  }, [])
+
   const [debate, setDebate] = useState<Schema['Argument']['type']>({
     content: '',
     self: false,

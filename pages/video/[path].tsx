@@ -1,6 +1,6 @@
 // import { useRouter } from "next/router";
 import { useState, useEffect } from 'react'
-import { GetStaticPaths, GetStaticProps } from 'next'
+import { GetStaticPaths, GetStaticProps, GetServerSideProps } from 'next'
 import { getUrl } from 'aws-amplify/storage'
 import { generateClient } from 'aws-amplify/api'
 import { type Schema } from '@/amplify/data/resource'
@@ -21,21 +21,21 @@ interface VideoProps {
   channel?: Schema['Video']['type'] | null
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  // Fetch or define your dynamic paths
-  const paths = [
-    { params: { path: 'video-1' } }
-    // { params: { path: "video-2" } },
-  ]
+// export const getStaticPaths: GetStaticPaths = async () => {
+//   // Fetch or define your dynamic paths
+//   const paths = [
+//     { params: { path: 'video-1' } }
+//     // { params: { path: "video-2" } },
+//   ]
 
-  return {
-    paths,
-    fallback: true // or true
-  }
-}
+//   return {
+//     paths,
+//     fallback: true // or true
+//   }
+// }
 
-export const getStaticProps: GetStaticProps<VideoProps> = async ({ params }) => {
-  const { path } = params as { path: string }
+export const getServerSideProps: GetServerSideProps<VideoProps> = async (context) => {
+  const { path } = context.params as { path: string }
   console.log('url path ==>', path)
   const dpath = decodeURIComponent(path)
   const findex = dpath.indexOf('_')
@@ -90,8 +90,8 @@ export const getStaticProps: GetStaticProps<VideoProps> = async ({ params }) => 
           props: {
             data,
             videoArr: videosArr
-          },
-          revalidate: 3600 // Revalidate every 60 seconds
+          }
+          // revalidate: 3600 // Revalidate every 60 seconds
         }
       }
     }
@@ -103,15 +103,27 @@ export const getStaticProps: GetStaticProps<VideoProps> = async ({ params }) => 
   return {
     props: {
       data: null
-    },
-    revalidate: 3600 // Revalidate every 60 seconds
+    }
+    // revalidate: 3600 // Revalidate every 60 seconds
   }
 }
 
 const VideoPage = ({ data, videoArr, channel }: VideoProps) => {
+  console.log('props data is ', data)
   const [vidpage, setVidPage] = useState<VideoProps>({ data, videoArr })
   const [channelStat, setChannelStat] = useState<Schema['Video']['type'] | null>(channel ?? null)
+  const [isSubbed, setIsSubbed] = useState(false)
+  useEffect(() => {
 
+      if(typeof window !== "undefined" &&
+      localStorage.getItem("subbedto") &&
+      JSON.parse(localStorage.getItem("subbedto") ?? '').length &&
+      JSON.parse(localStorage.getItem("subbedto") ?? '').find((c: any) => c.username === data?.sortKey.split('_')[1])) {
+        setIsSubbed(true)
+      }
+
+    setVidPage({ data, videoArr })
+  }, [data, videoArr])
   useEffect(() => {
     const getclient = async () => {
       try {
@@ -296,6 +308,8 @@ const VideoPage = ({ data, videoArr, channel }: VideoProps) => {
             }
           )
 
+          console.log('unsubscribing', channelData, 'vidpage', vidpage)
+
           if (errors) {
             console.error(errors)
             alert('Error in subscribing please try again')
@@ -303,6 +317,8 @@ const VideoPage = ({ data, videoArr, channel }: VideoProps) => {
           }
 
           if (channelData && vidpage.data) {
+            console.log('unsubscribing user')
+
             let newSubbed = JSON.parse(localStorage.getItem('subbedto') ?? '')
 
             newSubbed = newSubbed.filter((c: any) => c.username !== vidpage.data?.sortKey.split('_')[1])
@@ -327,6 +343,7 @@ const VideoPage = ({ data, videoArr, channel }: VideoProps) => {
               console.log('user unsubbed', user)
               localStorage.setItem('subbedto', JSON.stringify(newSubbed))
               alert('Unsubscribed')
+              setIsSubbed(false)
               setChannelStat(channelData)
             }
           }
@@ -396,6 +413,7 @@ const VideoPage = ({ data, videoArr, channel }: VideoProps) => {
               console.log('video data updated in video channel =>', vids.subs)
               alert('Subscribed to :' + newSubChannel.dn)
               v.subbedto && localStorage.setItem('subbedto', JSON.stringify(v?.subbedto))
+              setIsSubbed(true)
               setChannelStat(vids)
               // setVidPage({ ...vidpage, data: vids })
             }
@@ -407,7 +425,7 @@ const VideoPage = ({ data, videoArr, channel }: VideoProps) => {
     }
   }
 
-  console.log('data from dynamoDB =>', data)
+  console.log('data from dynamoDB =>', vidpage)
   return (
     <div className="video-page">
       {data && (
@@ -429,18 +447,15 @@ const VideoPage = ({ data, videoArr, channel }: VideoProps) => {
               </div>
 
               <div className="like-share">
-                {/* {typeof window !== "undefined" &&
-                localStorage.getItem("subbedto") &&
-                JSON.parse(localStorage.getItem("subbedto") ?? "").length &&
-                JSON.parse(localStorage.getItem("subbedto") ?? "").find(
-                  (c: any) => c.username === data?.sortKey.split("_")[1]
-                ) ? (
-                  <button className="subscribe">Subscribed</button>
-                ) : ( */}
-                <button className="subscribe" onClick={handleSubscribe}>
-                  Subscribe
-                </button>
-                {/* )} */}
+                  {isSubbed ? (
+                    <button className="subscribe" onClick={handleSubscribe}>
+                      Subscribed
+                    </button>
+                  ) : (
+                    <button className="subscribe" onClick={handleSubscribe}>
+                      Subscribe
+                    </button>
+                  )}
 
                 <div className="like-section">
                   <button>{vidpage.data?.likes ?? '0'}</button>

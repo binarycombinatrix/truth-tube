@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 import { GetStaticPaths, GetStaticProps } from "next"
 import Link from "next/link"
 import Image from "next/image"
@@ -85,10 +86,18 @@ export const getStaticProps: GetStaticProps<VideoProps> = async ({
   }
 }
 export default function App({ data, path }: VideoProps) {
+  const [myChannel, setMyChannel] = useState(false)
+
+  useEffect(() => {
+    if(path === localStorage.getItem("username")) setMyChannel(true)
+  }, [path])
+
   const logout = () => {
     localStorage.clear()
     Router.push("/")
   }
+
+  console.log("the path is ", path)
 
   return (
     <main>
@@ -124,7 +133,8 @@ export default function App({ data, path }: VideoProps) {
             </div>
           </>
         )}
-        <button
+        
+        {myChannel && <button
           style={{
             cursor: "pointer",
             display: "flex",
@@ -135,7 +145,8 @@ export default function App({ data, path }: VideoProps) {
         >
           <Image src="/logout.svg" alt="search" width={30} height={30} />
           <span>Sign Out</span>
-        </button>
+        </button>}
+        
       </div>
       <ul className="video-list">
         {data &&

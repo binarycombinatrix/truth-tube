@@ -114,13 +114,14 @@ const VideoPage = ({ data, videoArr, channel }: VideoProps) => {
   const [channelStat, setChannelStat] = useState<Schema['Video']['type'] | null>(channel ?? null)
   const [isSubbed, setIsSubbed] = useState(false)
   useEffect(() => {
-
-      if(typeof window !== "undefined" &&
-      localStorage.getItem("subbedto") &&
-      JSON.parse(localStorage.getItem("subbedto") ?? '').length &&
-      JSON.parse(localStorage.getItem("subbedto") ?? '').find((c: any) => c.username === data?.sortKey.split('_')[1])) {
-        setIsSubbed(true)
-      }
+    if (
+      typeof window !== 'undefined' &&
+      localStorage.getItem('subbedto') &&
+      JSON.parse(localStorage.getItem('subbedto') ?? '').length &&
+      JSON.parse(localStorage.getItem('subbedto') ?? '').find((c: any) => c.username === data?.sortKey.split('_')[1])
+    ) {
+      setIsSubbed(true)
+    }
 
     setVidPage({ data, videoArr })
   }, [data, videoArr])
@@ -436,26 +437,30 @@ const VideoPage = ({ data, videoArr, channel }: VideoProps) => {
             <div className="video-dp-section">
               <div className="video-dn">
                 {typeof window !== undefined && data?.dp != null && data?.dp != '' ? (
-                  <StorageImage className="card-dp" path={data?.dp} fallbackSrc="/profile.svg" alt="Profile" />
+                  <Link href={`/channel/${data?.sortKey?.split(/[_]/)[1] ?? ''}`}>
+                    <StorageImage className="card-dp" path={data?.dp} fallbackSrc="/profile.svg" alt="Profile" />
+                  </Link>
                 ) : (
                   <img className="card-dp" src="/profile.svg" alt="login" />
                 )}
                 <div>
-                  <strong>{data?.dn}</strong>
+                  <Link href={`/channel/${data?.sortKey?.split(/[_]/)[1] ?? ''}`}>
+                    <strong>{data?.dn}</strong>
+                  </Link>
                   <strong>{channelStat?.subs?.length}</strong>
                 </div>
               </div>
 
               <div className="like-share">
-                  {isSubbed ? (
-                    <button className="subscribe" onClick={handleSubscribe}>
-                      Subscribed
-                    </button>
-                  ) : (
-                    <button className="subscribe" onClick={handleSubscribe}>
-                      Subscribe
-                    </button>
-                  )}
+                {isSubbed ? (
+                  <button className="subscribe" onClick={handleSubscribe}>
+                    Subscribed
+                  </button>
+                ) : (
+                  <button className="subscribe" onClick={handleSubscribe}>
+                    Subscribe
+                  </button>
+                )}
 
                 <div className="like-section">
                   <button>{vidpage.data?.likes ?? '0'}</button>

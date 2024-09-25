@@ -21,7 +21,9 @@ export const VideoCard = ({ video }: { video: VideoObject }) => {
       <div className="card-details">
         <span>
           {video?.dp ? (
+            <Link href={`/channel/${video?.sortKey?.split(/[_]/)[1] ?? ''}`}>
             <StorageImage className="card-dp" path={video.dp ?? ''} fallbackSrc="/profile.svg" alt="Profile" />
+            </Link>
           ) : (
             <img className="card-dp" src="/profile.svg" alt="profile" />
           )}

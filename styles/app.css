@@ -111,7 +111,7 @@ input[type='search'] {
   align-items: flex-start;
   z-index: -9999;
   left: -150vw;
-  transition: transform 0.5s ease; /* Transition for smooth effect */
+  transition: transform 0.6s ease; /* Transition for smooth effect */
 }
 
 .show-sidebar {

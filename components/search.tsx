@@ -1,17 +1,29 @@
-"use client"
-import Link from "next/link"
-import Image from "next/image"
-import { StorageImage } from "@aws-amplify/ui-react-storage"
-import { useState, useEffect } from "react"
+'use client'
+import Link from 'next/link'
+import Image from 'next/image'
+import { StorageImage } from '@aws-amplify/ui-react-storage'
+import { useState, useEffect, useRef } from 'react'
 
 export default function Search() {
-  const [searchText, setSearchText] = useState("")
+  const sidebarRef = useRef<HTMLDivElement>(null)
+  const [searchText, setSearchText] = useState('')
   const [showSidebar, setShowSidebar] = useState(false)
   const [client, setClient] = useState(false)
 
   useEffect(() => {
     if (typeof window !== undefined) {
       setClient(true)
+    }
+
+    function handleClickOutside(event: MouseEvent) {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        setShowSidebar(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
 
@@ -25,11 +37,8 @@ export default function Search() {
   } else
     return (
       <>
-        <div className={`sidebar ${showSidebar ? "show-sidebar" : ""}`}>
-          <div
-            className="sidebar-close clickable"
-            onClick={() => setShowSidebar(false)}
-          >
+        <div className={`sidebar ${showSidebar ? 'show-sidebar' : ''}`} ref={sidebarRef}>
+          <div className="sidebar-close clickable" onClick={() => setShowSidebar(false)}>
             <h1>x</h1>
           </div>
           <div className="sidebar-header">
@@ -38,14 +47,9 @@ export default function Search() {
                 <img src="/logo.png" className="sidebar-logo" alt="logo" />
               </Link>
             </div>
-            {typeof window !== undefined && localStorage.getItem("username") ? (
-              <Link href={`/channel/${localStorage.getItem("username")}`}>
-                <StorageImage
-                  className="card-dp"
-                  path={localStorage.getItem("dp") ?? ""}
-                  fallbackSrc="/profile.svg"
-                  alt="Profile"
-                />
+            {typeof window !== undefined && localStorage.getItem('username') ? (
+              <Link href={`/channel/${localStorage.getItem('username')}`}>
+                <StorageImage className="card-dp" path={localStorage.getItem('dp') ?? ''} fallbackSrc="/profile.svg" alt="Profile" />
               </Link>
             ) : (
               <Link href="/login">
@@ -56,12 +60,7 @@ export default function Search() {
           <ul>
             <li>
               <Link href="/">
-                <Image
-                  src="/home-icon.svg"
-                  alt="search"
-                  width={30}
-                  height={30}
-                />
+                <Image src="/home-icon.svg" alt="search" width={30} height={30} />
                 <span>Home</span>
               </Link>
             </li>
@@ -73,20 +72,14 @@ export default function Search() {
             <Image src="/watch.svg" alt="search" width={30} height={30} />
             <span>Watch Later</span>
           </li> */}
-            {typeof window !== undefined &&
-              typeof localStorage !== "undefined" && (
-                <li>
-                  <Link href={`/channel/${localStorage.getItem("username")}`}>
-                    <Image
-                      src="/channel.svg"
-                      alt="channel"
-                      width={30}
-                      height={30}
-                    />
-                    <span>Your Channel</span>
-                  </Link>
-                </li>
-              )}
+            {typeof window !== undefined && typeof localStorage !== 'undefined' && (
+              <li>
+                <Link href={`/channel/${localStorage.getItem('username')}`}>
+                  <Image src="/channel.svg" alt="channel" width={30} height={30} />
+                  <span>Your Channel</span>
+                </Link>
+              </li>
+            )}
 
             <li>
               <div onClick={logout}>
@@ -102,7 +95,7 @@ export default function Search() {
             </li>
           </ul>
 
-          <div style={{ width: "100%" }}>
+          <div style={{ width: '100%' }}>
             <hr />
           </div>
 
@@ -112,31 +105,21 @@ export default function Search() {
             </div>
             <ul>
               {typeof window !== undefined &&
-                localStorage.getItem("subbedto") &&
-                JSON.parse(localStorage.getItem("subbedto") ?? "").map(
-                  (c: any) => (
-                    <li key={c.username}>
-                      <Link href={`/channel/${c.username}`}>
-                        <StorageImage
-                          className="card-dp"
-                          path={c.dp ?? ""}
-                          fallbackSrc="/profile.svg"
-                          alt="Profile"
-                        />
-                        <span>{c.dn}</span>
-                      </Link>
-                    </li>
-                  )
-                )}
+                localStorage.getItem('subbedto') &&
+                JSON.parse(localStorage.getItem('subbedto') ?? '').map((c: any) => (
+                  <li key={c.username}>
+                    <Link href={`/channel/${c.username}`}>
+                      <StorageImage className="card-dp" path={c.dp ?? ''} fallbackSrc="/profile.svg" alt="Profile" />
+                      <span>{c.dn}</span>
+                    </Link>
+                  </li>
+                ))}
             </ul>
           </div>
         </div>
         <div className="navbar">
           <div>
-            <div
-              className="clickable menu-button"
-              onClick={() => setShowSidebar(true)}
-            >
+            <div className="clickable menu-button" onClick={() => setShowSidebar(true)}>
               <img src="/Hamburger.svg" className="menu-image" alt="menu" />
             </div>
             <Link href="/">
@@ -144,35 +127,16 @@ export default function Search() {
             </Link>
           </div>
           <div className="search-input">
-            <input
-              type="search"
-              results={5}
-              autoSave="main search"
-              name="search"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-            />
+            <input type="search" results={5} autoSave="main search" name="search" value={searchText} onChange={(e) => setSearchText(e.target.value)} />
             <Link href={`/search/${searchText}`}>
               <button>
-                <Image
-                  src="/search.png"
-                  alt="search"
-                  layout="responsive"
-                  width={30}
-                  height={30}
-                  sizes="(max-width: 600px) 5vw, (max-width: 1200px) 5vw, 5vw"
-                />
+                <Image src="/search.png" alt="search" layout="responsive" width={30} height={30} sizes="(max-width: 600px) 5vw, (max-width: 1200px) 5vw, 5vw" />
               </button>
             </Link>
           </div>
-          {typeof window !== undefined && localStorage.getItem("username") ? (
-            <Link href={`/channel/${localStorage.getItem("username")}`}>
-              <StorageImage
-                className="card-dp"
-                path={localStorage.getItem("dp") ?? ""}
-                fallbackSrc="/profile.svg"
-                alt="Profile"
-              />
+          {typeof window !== undefined && localStorage.getItem('username') ? (
+            <Link href={`/channel/${localStorage.getItem('username')}`}>
+              <StorageImage className="card-dp" path={localStorage.getItem('dp') ?? ''} fallbackSrc="/profile.svg" alt="Profile" />
             </Link>
           ) : (
             <Link href="/login">
